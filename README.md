@@ -3,6 +3,20 @@
 Creating a docker-like container service from scratch using Go
 
 Go를 사용한 도커와 비슷한 컨테이너 서비스 시작부터 만들기
+
+## 시작 전 준비
+도커에서 우분투 이미지를 준비합니다.
+```sh
+    docker run -d --rm --name ubuntufs ubuntu:20.04 sleep 1000
+    docker export ubuntufs -o ubuntufs.tar
+    docker stop ubuntufs
+    mkdir -p /home/liz/ubuntufs
+    tar xf ubuntufs.tar -C /home/liz/ubuntufs/
+```
+
+그리고 당연히 Go 가 system path로 설치 되어 있어야 합니다.
+
+
 ## 시작하는 방법
 해당 코드는 우분투 20.04 lts 에서 확인하였습니다.
 
