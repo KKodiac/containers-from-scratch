@@ -38,17 +38,17 @@ func run() {
 
 func child() {
 	fmt.Printf("Running %v \n", os.Args[2:])
-
+	cg()
 	cmd := exec.Command(os.Args[2], os.Args[3:]...)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 
 	must(syscall.Sethostname([]byte("container")))
-	must(syscall.Chroot("/Users/seanhong/Developer/Personal/rootless-containers-from-scratch"))
+	must(syscall.Chroot("/home/ubuntu/ubuntufs"))
 	must(os.Chdir("/"))
-	must(syscall.Mount("proc", "proc"))
-	must(syscall.Mount("hting", "mytemp", "tmpfs", 0, ""))
+	must(syscall.Mount("proc", "proc", "proc", 0, ""))
+	// must(syscall.Mount("thing", "mytemp", "tmpfs", 0, ""))
 
 	must(cmd.Run())
 
@@ -59,10 +59,10 @@ func child() {
 func cg() {
 	cgroups := "/sys/fs/cgroup/"
 	pids := filepath.Join(cgroups, "pids")
-	os.Mkdir(filepath.Join(pids, "seanhong"), 0755)
-	must(ioutil.WriteFile(filepath.Join(pids, "seanhong/pids.max"), []byte("20"), 0700)) // set max number of pids to 20
-	must(ioutil.WriteFile(filepath.Join(pids, "seanhong/notify_on_release"), []byte("1"), 0700))
-	must(ioutil.WriteFile(filepath.Join(pids, "seanhong/cgroup.procs"), []byte(strconv.Itoa(os.Getpid())), 0700))
+	os.Mkdir(filepath.Join(pids, "ubuntu"), 0755)
+	must(ioutil.WriteFile(filepath.Join(pids, "ubuntu/pids.max"), []byte("20"), 0700)) // set max number of pids to 20
+	must(ioutil.WriteFile(filepath.Join(pids, "ubuntu/notify_on_release"), []byte("1"), 0700))
+	must(ioutil.WriteFile(filepath.Join(pids, "ubuntu/cgroup.procs"), []byte(strconv.Itoa(os.Getpid())), 0700))
 }
 
 func must(err error) {
